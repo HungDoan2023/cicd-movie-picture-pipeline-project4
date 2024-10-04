@@ -80,3 +80,10 @@ http://afc13f8636b4647979521d2e00b20b70-1852970977.us-east-1.elb.amazonaws.com/m
 
 ### Thanks
 Thanks Mentors, Coach and the good course so I have a lot of hand-on experience for working on this project. It made me has a good knownledge about CI/CD and how to approach to the appropriate CI/CD pipeline on some specific scenarios.
+
+
+### References Link
+https://knowledge.udacity.com/questions/1052427
+
+https://knowledge.udacity.com/questions/1052414
+
