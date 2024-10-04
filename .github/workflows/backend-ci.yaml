@@ -70,7 +70,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pipenv install --dev && pip install flake8
+          pipenv install --dev
 
       - name: Run tests
         run: |
