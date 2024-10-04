@@ -110,7 +110,7 @@ jobs:
             docker-${{ github.sha }}-
 
   deploy:
-    name: Deploy to Kubernetes
+    name: Deploy to EKS
     runs-on: ubuntu-latest
     needs: [build]
     steps:
