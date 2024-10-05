@@ -13,6 +13,17 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
+  settingworkplace:
+    name: Setting new workplace
+    runs-on: ubuntu-latest
+    defaults:
+        run: 
+          working-directory: ./setup
+    steps:
+      - name: Setting new workspace backend-service
+        run: ./workspace-setup.sh || true
+        working-directory: ./setup
+
   lint:
     name: Validation Source Code Backend Service with Flake8 (Linting)
     runs-on: ubuntu-latest
@@ -56,13 +67,9 @@ jobs:
     name: Running Unit Testing for Backend Service
     runs-on: ubuntu-latest
     defaults:
-      run:
-        working-directory: ./starter/backend-service
+        run:
+          working-directory: ./starter/backend-service
     steps:
-      - name: Setting new workspace backend-service
-        run: ./workspace-setup.sh || true
-        working-directory: ./setup
-
       - name: Fetching & Check out Source Code From Github
         uses: actions/checkout@v3
 
@@ -90,7 +97,7 @@ jobs:
   build:
     name: Build and Push Docker image to Amazon ECR service
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [settingworkplace, lint, test]
     defaults:
       run:
         working-directory: ./starter/backend-service
