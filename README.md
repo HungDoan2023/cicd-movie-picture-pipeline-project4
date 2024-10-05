@@ -62,9 +62,6 @@ A backend API written in Python using the Flask framework.
 
 ![](./images/mpp-create-secret-environment.png)
 
-3. Creating ECR
-![](./images/mpp-create-ecr-successful.png)
-
 
 ### List out Pods, Services
 ![](./images/mpp-get-services-pods-from-eks.png)

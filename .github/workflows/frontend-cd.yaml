@@ -1,25 +1,26 @@
-name: Frontend Service CD
+name: Frontend Service Continuous Deployment
 
 on:
+  # This allows running on-demand
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - 'starter/frontend-service/**'
+      # This will only run on changes to the frontend code
+      - 'starter/frontend/**'
 env:
   NODE_VERSION: 18.x
-  AWS_REGION: us-east-1
 
 jobs:
   lint:
-    name: Validation Source Code for Frontend Service with ESLint (Linting)
+    name: Frontend Linting
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/frontend-service
+        working-directory: ./starter/frontend
     steps:
-      - name: Fetching & Check out Source Code From Github
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Cache Node.js dependencies
@@ -30,7 +31,7 @@ jobs:
           restore-keys: |
             npm-
 
-      - name: Install some Dependency Packages with npm install statement based on package.json
+      - name: Install dependencies
         run: |
           npm install
 
@@ -39,52 +40,52 @@ jobs:
           npm run lint -- --fix
 
   test:
-    name: Running Unit Tests for Frontend Service
+    name: Frontend Testing
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/frontend-service
+        working-directory: ./starter/frontend
     steps:
-      - name: Fetching & Check out Source Code From Github
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install some Dependency Packages with npm install statement based on package.json
-        run: |
+      - name: Install dependencies
+        run: | 
           npm install
 
-      - name: Running Unit Testings
+      - name: Run tests
         run: |
           npm test
 
   build:
-    name: Build and Push Docker image to Amazon ECR service
+    name: Build and Push Docker image to Amazon ECR
     runs-on: ubuntu-latest
     needs: [lint, test]
     defaults:
       run:
-        working-directory: ./starter/frontend-service
+        working-directory: ./starter/frontend
     steps:
-      - name: Fetching & Check out Source Code From Github
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install some Dependency Packages with npm install statement based on package.json
+      - name: Install dependencies
         run: |
           npm install
 
-      - name: Configure AWS Credentials with configure-aws-credentials v4
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: us-east-1
 
-      - name: Login to Amazon ECR service
+      - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          mask-password: "true"
+          mask-password: 'true'
 
-      - name: Update Kube Config file, Export IP Address, Build & Tag Docker Image
+      - name: Build, Tag, and Push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: frontend
@@ -98,8 +99,9 @@ jobs:
           echo $EXTERNALIP
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG --build-arg=REACT_APP_MOVIE_API_URL=http://$EXTERNALIP .
           docker images
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-      - name: Caching Docker image
+      - name: Cache Docker image
         uses: actions/cache@v3
         with:
           path: ~/docker-cache
@@ -108,19 +110,19 @@ jobs:
             docker-${{ github.sha }}-
 
   deploy:
-    name: Pickup Docker Image & Deploy to Amazon EKS service
+    name: Deploy to EKS
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - name: Checkout Source Code from Github
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials with configure-aws-credentials v4
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: us-east-1
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -128,25 +130,25 @@ jobs:
         with:
           mask-password: "true"
 
-      - name: Update kube config file
+      - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig --name cluster
 
-      - name: Running init.sh to update permission github-action-user to kube config
+      - name: Run init.sh
         run:  |
           ./init.sh || true
         working-directory: ./setup
 
-      - name: Set Docker image in Kustomization yaml file
+      - name: Set Docker image in Kustomize
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: frontend
           IMAGE_TAG: latest
         run: |
-          kustomize edit set image frontend-service=$REGISTRY/$REPOSITORY:$IMAGE_TAG
-        working-directory: ./starter/frontend-service/k8s
+          kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+        working-directory: ./starter/frontend/k8s
 
-      - name: Build Kustomize Configuration & Apply Kubernetes Resources
+      - name: Apply Kubernetes resources
         run: |
           kustomize build | kubectl apply -f -
-        working-directory: ./starter/frontend-service/k8s
+        working-directory: ./starter/frontend/k8s

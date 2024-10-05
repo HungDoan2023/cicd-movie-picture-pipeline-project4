@@ -7,25 +7,25 @@ set -e
 project_dir=$(pwd)
 
 echo "Configuring backend-service application"
-cd backend-service
+cd backend
 echo "Cleaning backend-service environment..."
 pipenv --rm > /dev/null 2>&1 || true
 echo "Done with cleanup!"
 
-echo "Installing backend-service dependencies..."
+echo "Installing backend dependencies..."
 pipenv install > /dev/null 2>&1
-echo "Done configuring backend-service!"
+echo "Done configuring backend!"
 cd $project_dir
 
 echo "Configuring frontend-service application"
-cd frontend-service
+cd frontend
 echo "Cleaning frontend-service environment..."
 npm run clean > /dev/null 2>&1
 
-echo "Installing frontend-service dependencies..."
+echo "Installing frontend dependencies..."
 nvm install > /dev/null 2>&1
 npm ci --silent > /dev/null 2>&1
-echo "Done configuring frontend-service!"
+echo "Done configuring frontend!"
 cd $project_dir
 
 echo "Done setting up workspace 🚀"
