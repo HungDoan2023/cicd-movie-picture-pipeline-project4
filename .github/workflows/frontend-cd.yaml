@@ -1,4 +1,4 @@
-name: Frontend Service Continuous Deployment
+name: Frontend Service CD
 
 on:
   workflow_dispatch:
