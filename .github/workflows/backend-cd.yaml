@@ -20,10 +20,6 @@ jobs:
       run:
         working-directory: ./starter/backend-service
     steps:
-      - name: Setting new workspace backend-service
-        run: ./workspace-setup.sh || true
-        working-directory: ./setup
-
       - name: Fetching & Check out source code from Github
         uses: actions/checkout@v3
 
@@ -63,6 +59,10 @@ jobs:
       run:
         working-directory: ./starter/backend-service
     steps:
+      - name: Setting new workspace backend-service
+        run: ./workspace-setup.sh || true
+        working-directory: ./setup
+
       - name: Fetching & Check out Source Code From Github
         uses: actions/checkout@v3
 
