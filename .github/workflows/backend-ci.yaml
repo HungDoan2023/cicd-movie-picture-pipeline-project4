@@ -1,30 +1,29 @@
 name: Backend Continuous Integration
 
 on:
-  # This allows running on-demand
   workflow_dispatch:
   pull_request:
     branches:
       - main
-    paths:
-      # This will only run on changes to the backend code
-      - "starter/backend/**"
+    paths:      
+      - "starter/backend-service/**"
 
 env:
   PYTHON_VERSION: 3.11
+  AWS_REGION: us-east-1
 
 jobs:
   lint:
-    name: Backend Linting
+    name: Validation Source Code Backend Service with Flake8 (Linting)
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/backend
+        working-directory: ./starter/backend-service
     steps:
-      - name: Checkout code
+      - name: Fetching & Check out Source Code From Github
         uses: actions/checkout@v3
 
-      - name: Cache pipenv dependencies
+      - name: Caching pipenv Dependency Packages
         uses: actions/cache@v3
         with:
           path: ~/.cache/pipenv
@@ -32,92 +31,92 @@ jobs:
           restore-keys: |
             pipenv-${{ runner.os }}-
 
-      - name: Setup Python
+      - name: Setting Setup-Python v4
         uses: actions/setup-python@v4
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
-      - name: Install pipenv
+      - name: Installation pipenv tool
         run: |
           pip install pipenv
 
-      - name: Install flake8
+      - name: Installation flake8 tool
         run: |
           pip install flake8
 
-      - name: Install dependencies
+      - name: Installation some Dependency Packages
         run: |
           pipenv install --dev
 
-      - name: Run lint
+      - name: Running lint for Validation Source Code
         run: |
           pipenv run lint
 
   test:
-    name: Backend Testing
+    name: Running Unit Testing for Backend Service
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./starter/backend
+        working-directory: ./starter/backend-service
     steps:
-      - name: Checkout code
+      - name: Fetching & Check out source code from Github
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Setting Setup-Python v4
         uses: actions/setup-python@v4
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
-      - name: Install pipenv
+      - name: Installation pipenv tool
         run: |
           pip install pipenv
 
-      - name: Install dependencies
+      - name: Installation some Dependency Packages
         run: |
           pipenv install --dev
 
-      - name: Run tests
+      - name: Running Unit Tests
         run: |
           pipenv run test
 
   build:
-    name: Build and Push Docker image
+    name: Build and Push Docker image to Amazon ECR service
     runs-on: ubuntu-latest
     needs: [lint, test]
     defaults:
       run:
-        working-directory: ./starter/backend
+        working-directory: ./starter/backend-service
     steps:
-      - name: Checkout code
+      - name: Fetching & Check out Source Code From Github
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Setting  Setup-Python v4
         uses: actions/setup-python@v4
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
-      - name: Install pipenv
+      - name: Installation pipenv
         run: |
           pip install pipenv
 
-      - name: Install dependencies
+      - name: Installation some Dependency Packages
         run: |
           pipenv install
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials with configure-aws-credentials v4
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{env.AWS_REGION}}
 
-      - name: Login to Amazon ECR
+      - name: Login to Amazon ECR service
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: "true"
 
-      - name: Build, Tag, and Push docker image
+      - name: Build, Tag, and Push Docker Image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: backend
@@ -129,7 +128,7 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker images
 
-      - name: Cache Docker image
+      - name: Caching Docker image
         uses: actions/cache@v3
         with:
           path: ~/docker-cache
