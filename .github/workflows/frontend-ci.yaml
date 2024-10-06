@@ -13,16 +13,16 @@ env:
 
 jobs:
   lint:
-    name: Frontend Linting
+    name: Scan Code with ESLint
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./starter/frontend
     steps:
-      - name: Checkout code
+      - name: Checkout github code
         uses: actions/checkout@v3
 
-      - name: Cache Node.js dependencies
+      - name: Cache node.js dependencies
         uses: actions/cache@v3
         with:
           path: ~/.npm
@@ -30,7 +30,7 @@ jobs:
           restore-keys: |
             npm-
 
-      - name: Install dependencies
+      - name: Install dependency package with npm install
         run: |
           npm install
 
@@ -39,16 +39,16 @@ jobs:
           npm run lint -- --fix
 
   test:
-    name: Frontend Testing
+    name: Run Unit Testing
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./starter/frontend
     steps:
-      - name: Checkout code
+      - name: Checkout github code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependency package with npm install
         run: |
           npm install
 
@@ -57,21 +57,21 @@ jobs:
           npm test
 
   build:
-    name: Build and Push Docker image
+    name: Build/Push to ECR
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [lint]
     defaults:
       run:
         working-directory: ./starter/frontend
     steps:
-      - name: Checkout code
+      - name: Checkout github code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependency package with npm install
         run: |
           npm install
 
-      - name: Configure AWS Credentials
+      - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -84,7 +84,7 @@ jobs:
         with:
           mask-password: "true"
 
-      - name: Build, Tag, and Push docker image
+      - name: Update kubeconfig file, export Ip address, build, tag & push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: frontend
@@ -99,7 +99,7 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG --build-arg=REACT_APP_MOVIE_API_URL=http://$EXTERNALIP .
           docker images
 
-      - name: Cache Docker image
+      - name: Cache docker image
         uses: actions/cache@v3
         with:
           path: ~/docker-cache

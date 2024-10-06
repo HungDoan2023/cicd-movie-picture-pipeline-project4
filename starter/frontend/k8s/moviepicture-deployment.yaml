@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: mpp-frontend
   labels:
     app: frontend
 spec:
@@ -15,7 +15,7 @@ spec:
         app: frontend
     spec:
       containers:
-        - name: frontend
-          image: frontend
-          ports:
-            - containerPort: 3000
+      - name: frontend
+        image: frontend
+        ports:
+        - containerPort: 3000

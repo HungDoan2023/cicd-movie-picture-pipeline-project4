@@ -14,16 +14,16 @@ env:
 
 jobs:
   lint:
-    name: Backend Linting
+    name: Scan Code (Linting)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./starter/backend
     steps:
-      - name: Checkout code
+      - name: Checkout github code
         uses: actions/checkout@v3
 
-      - name: Cache pipenv dependencies
+      - name: Cache dependency pipenv
         uses: actions/cache@v3
         with:
           path: ~/.cache/pipenv
@@ -31,63 +31,64 @@ jobs:
           restore-keys: |
             pipenv-${{ runner.os }}-
 
-      - name: Setup Python
+      - name: Setting setup-python
         uses: actions/setup-python@v4
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
-      - name: Install pipenv
+      - name: Install pipenv package
         run: |
           pip install pipenv
 
-      - name: Install flake8
+      - name: Install flake8 package
         run: |
           pip install flake8
 
-      - name: Install dependencies
+      - name: Install dependency packages
         run: |
           pipenv install --dev
 
-      - name: Run lint
+      - name: Scan code with lint
         run: |
           pipenv run lint
 
   test:
-    name: Backend Testing
+    name: Run Unit Testing
     runs-on: ubuntu-latest
+    needs: [lint]
     defaults:
       run:
         working-directory: ./starter/backend
     steps:
-      - name: Checkout code
+      - name: Checkout github code
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Setting Setup-Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
-      - name: Install pipenv
+      - name: Install pipenv package
         run: |
           pip install pipenv
 
-      - name: Installation some Dependency Packages
+      - name: Install dependency packages
         run: |
           pipenv install --dev
 
-      - name: Run tests
+      - name: Run unit tests
         run: |
           pipenv run test
 
   build:
-    name: Build and Push Docker image
+    name: Build/Push to ECR
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [test]
     defaults:
       run:
         working-directory: ./starter/backend
     steps:
-      - name: Checkout code
+      - name: Checkout github code
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -95,28 +96,28 @@ jobs:
         with:
           python-version: ${{env.PYTHON_VERSION}}
 
-      - name: Install pipenv
+      - name: Install pipenv package
         run: |
           pip install pipenv
 
-      - name: Install dependencies
+      - name: Install dependency packages
         run: |
           pipenv install
 
-      - name: Configure AWS Credentials
+      - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{env.AWS_REGION}}
 
-      - name: Login to Amazon ECR
+      - name: Login to amazon ecr
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: "true"
 
-      - name: Build, Tag, and Push docker image
+      - name: Build, tag & push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: backend
@@ -128,7 +129,7 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker images
 
-      - name: Cache Docker image
+      - name: Cache docker image
         uses: actions/cache@v3
         with:
           path: ~/docker-cache
