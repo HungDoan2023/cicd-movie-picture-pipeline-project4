@@ -10,80 +10,150 @@ A backend API written in Python using the Flask framework.
 ### Build CI Pipeline for Frontend
 1. Workflow with Github Action (Backend, Frontend)
 
-![](./images/mmp-gha-workflow.png)
+![](./new_images/mpp-cicd-github-action.png)
 
-2. Frontend CI
-![](./images/mpp-run-frontend-ci-successful.png)
+2. Frontend Continue Integraiton (CI)
+Overview
+![](./new_images/mpp-frontend-ci-overview.png)
 
-![](./images/mpp-run-frontend-eslint-successful.png)
+Workflow
+![](./new_images/mpp-frontend-ci-workflow.png)
 
-![](./images/mpp-run-frontend-testing-successful.png)
+Linting Job
+![](./new_images/mpp-frontend-ci-linting.png)
 
-![](./images/mpp-run-frontend-build-push-to-docker-image-successful.png)
+Unit Test Job
+![](./new_images/mpp-frontend-ci-unit-testing.png)
+
+Build, Push image to Amazone ECR Job
+![](./new_images/mpp-frontend-ci-build-push-image-ecr.png)
 
 
 ### Build CD Pipeline for Frontend
-1. Frontend Continuouse Deployment (CD)
+1. Frontend Continue Deployment (CD)
 
-![](./images/mpp-run-frontend-deploy-to-eks-successful.png)
+Overview
+![](./new_images/mpp-frontend-cd-overview.png)
 
-![](./images/mpp-push-frontend-image-to-ecr-successful.png)
+Workflow
+![](./new_images/mpp-frontend-cd-workflow.png)
+
+Build, Push image to Amazone EKS
+![](./new_images/mpp-frontend-cd-deploy-image-eks.png)
 
 
 ### Build CI Pipeline for Backend
 1. Backend Continuous Integration (CI)
-![](./images/mpp-run-backend-ci-successful.png)
+Overview
+![](./new_images/mpp-backend-ci-overview.png)
 
-![](./images/mpp-run-linting-backend-ci-successful.png)
+Workflow
+![](./new_images/mpp-backend-ci-workflow.png)
 
-![](./images/mpp-run-testing-backend-ci-successful.png)
+Linting Job
+![](./new_images/mpp-backend-ci-linting.png)
+
+Unit Testing Job
+![](./new_images/mpp-backend-ci-unit-testing.png)
+
+Build, Push image to Amazone ECR
+![](./new_images/mpp-backend-ci-build-push-image-ecr.png)
+
+![](./new_images/mpp-backend-ci-build-push-image-ecr-1.png)
 
 
 ### Build CD Pipeline for Backend
-1. Backend Continuous Deployment
-![](./images/mpp-run-backend-cd-successful.png)
+1. Backend Continue Deployment (CD)
+Overview
+![](./new_images/mpp-backend-cd-overview.png)
 
-![](./images/mpp-run-backend-buld-push-to-docker-image-successful.png)
+Workflow
+![](./new_images/mpp-backend-cd-workflow.png)
 
-![](./images/mpp-backend-push-docker-image-to-ecr-successful.png)
+Deploy docker image to Amazone EKS
+![](./new_images/mpp-backend-cd-deploy-image-eks.png)
 
 ### Creating, Setting AWS Resources & Github (EKS, ECR, Github)
-1. Creating EKS
-![](./images/mpp-create-terraform-successful.png)
+1. AWS Resources
+VPC
+![](./new_images/mpp-vpc-created.png)
 
-![](./images/mpp-create-eks-successful.png)
+EC2
+![](./new_images/mpp-ec2-created.png)
 
-![](./images/mpp-create-eks-nodegroups-successful.png)
+LoadBalancer
+![](./new_images/mpp-loadbalancer-created.png)
 
-![](./images/mpp-eks-access-configuration-successful.png)
+![](./new_images/mpp-loadbalancer-1.png)
 
-2. Creating Github Action User & Secret Environment
-![](./images/mpp-create-github-action-user-successful.png)
+![](./new_images/mpp-loadbalancer-2.png)
 
-![](./images/mpp-create-secret-environment.png)
+SecurityGroup
+![](./new_images/mpp-securitygroup-created.png)
+
+
+Terraform init, apply
+![](./new_images/mpp-terraform-init-apply.png)
+
+![](./new_images/mpp-terraform-init-apply-successful.png)
+
+Amazone EKS
+![](./new_images/mpp-eks-created.png)
+
+Node Groups
+![](./new_images/mpp-eks-node-groups.png)
+
+IAM Access Entries
+![](./new_images/mpp-eks-access-iam-access-entries.png)
+
+Amazone ECR
+![](./new_images/mpp-ecr-created.png)
+
+ECR Repositories
+![](./new_images/mpp-ecr-created.png)
+
+ECR Backend Image
+![](./new_images/mpp-ecr-frontend-image-create.png)
+
+ECR Frontend Image
+![](./new_images/mpp-ecr-backend-image-create.png)
+
+
+1. Creating Github Action User & Secret Environment
+User Github Action
+![](./new_images/mpp-user-created.png)
+
+User Policy
+![](./new_images/mpp-add-user-policy.png)
 
 
 ### List out Pods, Services
-![](./images/mpp-get-services-pods-from-eks.png)
+List out Services, Deployments, Pods
+![](./new_images/mpp-list-out-services-pods-deployments.png)
 
-![](./images/mmp-display-movies-list.png)
+Describe Deployment Backend
+![](./new_images/mpp-describe-deployment-mpp-backend.png)
 
-![](./images/mmp-get-all-movies.png)
+Describe Deployment Frontend
+![](./new_images/mpp-describe-deployment-mpp-frontend.png)
 
-![](./images/mmp-get-movies-by-id.png)
+### Demo
+1. Frontend UI
+![](./new_images/mpp-display-frontend.png)
 
-Display Movies List
-http://ac61f07fa40ed4cbfaa7c96b0f80270f-513222409.us-east-1.elb.amazonaws.com/
+2. Backend API
+![](./new_images/mpp-display-api-backend.png)
 
-Getting API
-http://afc13f8636b4647979521d2e00b20b70-1852970977.us-east-1.elb.amazonaws.com/movies
+![](./new_images/mpp-display-api-backend-1.png)
+
+3. Display Movies List
+http://a203c0774075e48f0ad09e4446ad25a4-2113104560.us-east-1.elb.amazonaws.com/
+
+4. Getting API
+http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies
+
+http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies/123
 
 ### Thanks
 Thanks Mentors, Coach and the good course so I have a lot of hand-on experience for working on this project. It made me has a good knownledge about CI/CD and how to approach to the appropriate CI/CD pipeline on some specific scenarios.
-
-
-### References Link
-https://knowledge.udacity.com/questions/1052427
-
-https://knowledge.udacity.com/questions/1052414
 
