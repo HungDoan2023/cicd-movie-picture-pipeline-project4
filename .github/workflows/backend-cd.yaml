@@ -128,6 +128,7 @@ jobs:
           echo "Image Tag: $IMAGE_TAG"
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker images
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Cache docker image
         uses: actions/cache@v3
