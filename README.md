@@ -146,13 +146,13 @@ Describe Deployment Frontend
 
 ![](./new_images/mpp-display-api-backend-1.png)
 
-3. Display Movies List
+3. Display Movies List<br>
 http://a203c0774075e48f0ad09e4446ad25a4-2113104560.us-east-1.elb.amazonaws.com/
 
-4. Getting API
-http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies
+4. Getting API<br>
+http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies<br>
 
-http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies/123
+http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies/123<br>
 
 ### Thanks
 Thanks Mentors, Coach and the good course so I have a lot of hand-on experience for working on this project. It made me has a good knownledge about CI/CD and how to approach to the appropriate CI/CD pipeline on some specific scenarios.
