@@ -110,13 +110,13 @@ Amazone ECR
 ![](./new_images/mpp-ecr-created.png)
 
 ECR Repositories
-![](./new_images/mpp-ecr-created.png)
+![](./new_images/mpp-ecr-created-new.png)
 
 ECR Backend Image
-![](./new_images/mpp-ecr-frontend-image-create.png)
+![](./new_images/mpp-ecr-frontend-image-create-new.png)
 
 ECR Frontend Image
-![](./new_images/mpp-ecr-backend-image-create.png)
+![](./new_images/mpp-ecr-backend-image-create-new.png)
 
 
 1. Creating Github Action User & Secret Environment
@@ -129,30 +129,30 @@ User Policy
 
 ### List out Pods, Services
 List out Services, Deployments, Pods
-![](./new_images/mpp-list-out-services-pods-deployments.png)
+![](./new_images/mpp-list-out-services-pods-deployments-new.png)
 
 Describe Deployment Backend
-![](./new_images/mpp-describe-deployment-mpp-backend.png)
+![](./new_images/mpp-describe-deployment-mpp-backend-new.png)
 
 Describe Deployment Frontend
-![](./new_images/mpp-describe-deployment-mpp-frontend.png)
+![](./new_images/mpp-describe-deployment-mpp-frontend-new.png)
 
 ### Demo
 1. Frontend UI
-![](./new_images/mpp-display-frontend.png)
+![](./new_images/mpp-display-frontend-new.png)
 
 2. Backend API
-![](./new_images/mpp-display-api-backend.png)
+![](./new_images/mpp-display-api-backend-new.png)
 
-![](./new_images/mpp-display-api-backend-1.png)
+![](./new_images/mpp-display-api-backend-1-new.png)
 
 3. Display Movies List<br>
-http://a203c0774075e48f0ad09e4446ad25a4-2113104560.us-east-1.elb.amazonaws.com/
+http://a1e268f436d724583bf9fae1863da944-176110451.us-east-1.elb.amazonaws.com/
 
 4. Getting API<br>
-http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies<br>
+http://aec88c58774b647cfa4ea8cbc2cb8dcd-977072735.us-east-1.elb.amazonaws.com/movies<br>
 
-http://aedc41afddc594472aa9d3feabba71e9-22900422.us-east-1.elb.amazonaws.com/movies/123<br>
+http://aec88c58774b647cfa4ea8cbc2cb8dcd-977072735.us-east-1.elb.amazonaws.com/movies/123<br>
 
 ### Thanks
 Thanks Mentors, Coach and the good course so I have a lot of hand-on experience for working on this project. It made me has a good knownledge about CI/CD and how to approach to the appropriate CI/CD pipeline on some specific scenarios.
