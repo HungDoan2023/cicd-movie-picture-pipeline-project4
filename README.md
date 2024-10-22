@@ -22,6 +22,9 @@ Workflow
 Linting Job
 ![](./new_images/mpp-frontend-ci-linting.png)
 
+Caching for Nodejs Dependencies
+![](./new_images/mpp-frontend-ci-caching.png)
+
 Unit Test Job
 ![](./new_images/mpp-frontend-ci-unit-testing.png)
 
