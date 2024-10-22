@@ -49,6 +49,14 @@ jobs:
       - name: Checkout github code
         uses: actions/checkout@v3
 
+      - name: Cache node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('starter/frontend/package-lock.json') }}
+          restore-keys: |
+            npm-
+
       - name: Install dependency package with npm install
         run: |
           npm install
